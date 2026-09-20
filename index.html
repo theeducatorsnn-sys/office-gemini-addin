@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemini AI Assistant</title>
+    <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-title">
+                <h2>Gemini AI</h2>
+                <span id="host-badge" class="badge">Detecting...</span>
+            </div>
+            <button id="toggle-settings" class="btn-icon" title="API Key Settings">⚙️</button>
+        </header>
+
+        <!-- Settings Panel -->
+        <div id="settings-panel" class="settings-panel hidden">
+            <label for="api-key-input">Google Gemini API Key:</label>
+            <input type="password" id="api-key-input" placeholder="AQ.Ab8RN6..." />
+            <div class="settings-actions">
+                <button id="save-key-btn" class="btn btn-primary">Save Key</button>
+                <span id="key-status" class="status-msg"></span>
+            </div>
+        </div>
+
+        <!-- Chat History -->
+        <main id="chat-container" class="chat-container">
+            <div class="message system-msg">
+                👋 Welcome! Ask me anything or use the context action buttons below.
+            </div>
+        </main>
+
+        <!-- Dynamic Quick Actions -->
+        <div id="quick-actions" class="quick-actions">
+            <!-- Dynamically populated based on Office App -->
+        </div>
+
+        <!-- Input Box -->
+        <footer class="input-container">
+            <textarea id="user-input" rows="2" placeholder="Ask Gemini..."></textarea>
+            <button id="send-btn" class="btn btn-send">Send</button>
+        </footer>
+    </div>
+
+    <script src="api.js"></script>
+    <script src="office-integration.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
