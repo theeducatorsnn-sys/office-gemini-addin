@@ -42,18 +42,28 @@ async function handleUserSend() {
     appendMessage(text, 'user-msg');
     inputEl.value = '';
 
-    // System prompt engineered to force raw content generation instead of step-by-step instructions
-    const systemPrompt = 
-        "You are a direct content generator inside Microsoft Office. " +
-        "CRITICAL INSTRUCTION: Do NOT provide meta-instructions, step-by-step guides, or advice on how to use MS Word/Excel features. " +
-        "Directly output the final document content, text, tables, worksheets, or code as requested so it can be inserted into the document.";
+    const loadingEl = appendMessage("Thinking...", 'ai-msg');
 
     try {
-        const loadingEl = appendMessage("Thinking...", 'ai-msg');
-        const response = await geminiService.generateContent(text, systemPrompt);
+        let response = "";
         
-        // Render generated response
-        loadingEl.innerText = response;
+        // Regex pattern to check if the prompt is asking for image creation
+        const isImageRequest = /\b(image|picture|draw|photo|illustration|generate an image|create an image|make an image)\b/i.test(text);
+
+        if (isImageRequest) {
+            // Call Imagen 3 API via GeminiService
+            response = await geminiService.generateImage(text);
+            loadingEl.innerHTML = response; // Render base64 <img> tag directly
+        } else {
+            // System prompt engineered to force raw content generation instead of step-by-step instructions
+            const systemPrompt = 
+                "You are a direct content generator inside Microsoft Office. " +
+                "CRITICAL INSTRUCTION: Do NOT provide meta-instructions, step-by-step guides, or advice on how to use MS Word/Excel features. " +
+                "Directly output the final document content, text, tables, worksheets, or code as requested so it can be inserted into the document.";
+
+            response = await geminiService.generateContent(text, systemPrompt);
+            loadingEl.innerText = response;
+        }
 
         // Add "Insert into Document" action button under AI responses
         const insertBtn = document.createElement('button');
@@ -72,7 +82,8 @@ async function handleUserSend() {
         loadingEl.appendChild(insertBtn);
 
     } catch (err) {
-        appendMessage(`Error: ${err.message}`, 'system-msg');
+        loadingEl.innerText = `Error: ${err.message}`;
+        loadingEl.className = 'message system-msg';
     }
 }
 
@@ -95,6 +106,7 @@ function loadQuickActions(host, container) {
         actions = [
             { label: '✨ Reformat Selection', prompt: 'Reformat the selected text to be professional, clear, and well-structured. Output only the reformatted text.' },
             { label: '📝 Summarize Doc', prompt: 'Provide a concise bullet-point summary of the following text.' },
+            { label: '🎨 Create Image', prompt: 'Create an image illustration of ' },
             { label: '📐 Create Worksheet', prompt: 'Generate a printable worksheet with questions and spacing.' }
         ];
     } else if (host === Office.HostType.Excel) {
