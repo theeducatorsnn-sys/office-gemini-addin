@@ -12,9 +12,9 @@
   <DefaultLocale>en-US</DefaultLocale>
   <DisplayName DefaultValue="Gemini AI Assistant" />
   <Description DefaultValue="Universal Gemini AI Sidebar for MS Office Apps" />
-  <IconUrl DefaultValue="https://localhost:3000/assets/icon-32.png"/>
-  <HighResolutionIconUrl DefaultValue="https://localhost:3000/assets/icon-80.png"/>
-  <SupportUrl DefaultValue="https://localhost:3000/help"/>
+  <IconUrl DefaultValue="https://theeducatorsnn-sys.github.io/office-gemini-addin/assets/icon-32.png"/>
+  <HighResolutionIconUrl DefaultValue="https://theeducatorsnn-sys.github.io/office-gemini-addin/assets/icon-80.png"/>
+  <SupportUrl DefaultValue="https://theeducatorsnn-sys.github.io/office-gemini-addin/index.html"/>
 
   <Hosts>
     <Host Name="Document" />
@@ -25,7 +25,7 @@
   </Hosts>
 
   <DefaultSettings>
-    <SourceLocation DefaultValue="https://localhost:3000/index.html" />
+    <SourceLocation DefaultValue="https://theeducatorsnn-sys.github.io/office-gemini-addin/index.html" />
   </DefaultSettings>
 
   <Permissions>ReadWriteDocument</Permissions>
@@ -71,12 +71,12 @@
     </Hosts>
     <Resources>
       <bt:Images>
-        <bt:Image id="Icon16" default="https://localhost:3000/assets/icon-16.png"/>
-        <bt:Image id="Icon32" default="https://localhost:3000/assets/icon-32.png"/>
-        <bt:Image id="Icon80" default="https://localhost:3000/assets/icon-80.png"/>
+        <bt:Image id="Icon16" default="https://theeducatorsnn-sys.github.io/office-gemini-addin/assets/icon-16.png"/>
+        <bt:Image id="Icon32" default="https://theeducatorsnn-sys.github.io/office-gemini-addin/assets/icon-32.png"/>
+        <bt:Image id="Icon80" default="https://theeducatorsnn-sys.github.io/office-gemini-addin/assets/icon-80.png"/>
       </bt:Images>
       <bt:Urls>
-        <bt:Url id="TaskPaneUrl" default="https://localhost:3000/index.html"/>
+        <bt:Url id="TaskPaneUrl" default="https://theeducatorsnn-sys.github.io/office-gemini-addin/index.html"/>
       </bt:Urls>
     </Resources>
   </VersionOverrides>

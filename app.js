@@ -3,28 +3,30 @@ Office.onReady((info) => {
     const quickActionsContainer = document.getElementById('quick-actions');
     const apiKeyInput = document.getElementById('api-key-input');
 
-    hostBadge.innerText = info.host || "Web/Standalone";
-    apiKeyInput.value = geminiService.getApiKey();
+    if (hostBadge) hostBadge.innerText = info.host || "Web/Standalone";
+    if (apiKeyInput) apiKeyInput.value = geminiService.getApiKey();
 
     // Load Host-Specific Quick Action Buttons
     loadQuickActions(info.host, quickActionsContainer);
 
     // Event Listeners
-    document.getElementById('toggle-settings').addEventListener('click', () => {
+    document.getElementById('toggle-settings')?.addEventListener('click', () => {
         document.getElementById('settings-panel').classList.toggle('hidden');
     });
 
-    document.getElementById('save-key-btn').addEventListener('click', () => {
+    document.getElementById('save-key-btn')?.addEventListener('click', () => {
         const key = apiKeyInput.value;
         geminiService.setApiKey(key);
         const status = document.getElementById('key-status');
-        status.innerText = "Saved!";
-        status.style.color = "green";
-        setTimeout(() => { status.innerText = ""; }, 2000);
+        if (status) {
+            status.innerText = "Saved!";
+            status.style.color = "green";
+            setTimeout(() => { status.innerText = ""; }, 2000);
+        }
     });
 
-    document.getElementById('send-btn').addEventListener('click', handleUserSend);
-    document.getElementById('user-input').addEventListener('keydown', (event) => {
+    document.getElementById('send-btn')?.addEventListener('click', handleUserSend);
+    document.getElementById('user-input')?.addEventListener('keydown', (event) => {
         if (event.key === 'Enter' && !event.shiftKey) {
             event.preventDefault();
             handleUserSend();
@@ -40,17 +42,32 @@ async function handleUserSend() {
     appendMessage(text, 'user-msg');
     inputEl.value = '';
 
+    // System prompt engineered to force raw content generation instead of step-by-step instructions
+    const systemPrompt = 
+        "You are a direct content generator inside Microsoft Office. " +
+        "CRITICAL INSTRUCTION: Do NOT provide meta-instructions, step-by-step guides, or advice on how to use MS Word/Excel features. " +
+        "Directly output the final document content, text, tables, worksheets, or code as requested so it can be inserted into the document.";
+
     try {
         const loadingEl = appendMessage("Thinking...", 'ai-msg');
-        const response = await geminiService.generateContent(text, "You are a helpful MS Office assistant.");
+        const response = await geminiService.generateContent(text, systemPrompt);
+        
+        // Render generated response
         loadingEl.innerText = response;
 
-        // Add an "Insert into Document" action button under AI responses
+        // Add "Insert into Document" action button under AI responses
         const insertBtn = document.createElement('button');
         insertBtn.className = 'btn-chip';
-        insertBtn.style.marginTop = '6px';
+        insertBtn.style.marginTop = '8px';
         insertBtn.innerText = '📥 Insert into Document';
-        insertBtn.onclick = () => OfficeIntegration.insertText(response);
+        insertBtn.onclick = async () => {
+            try {
+                await OfficeIntegration.insertText(response);
+            } catch (err) {
+                alert(`Insertion failed: ${err.message}`);
+            }
+        };
+
         loadingEl.appendChild(document.createElement('br'));
         loadingEl.appendChild(insertBtn);
 
@@ -70,13 +87,15 @@ function appendMessage(text, className) {
 }
 
 function loadQuickActions(host, container) {
+    if (!container) return;
     container.innerHTML = '';
     let actions = [];
 
     if (host === Office.HostType.Word) {
         actions = [
-            { label: '✨ Reformat Selection', prompt: 'Reformat the selected text to be professional, clear, and well-structured.' },
-            { label: '📝 Summarize Doc', prompt: 'Provide a concise bullet-point summary of the following text.' }
+            { label: '✨ Reformat Selection', prompt: 'Reformat the selected text to be professional, clear, and well-structured. Output only the reformatted text.' },
+            { label: '📝 Summarize Doc', prompt: 'Provide a concise bullet-point summary of the following text.' },
+            { label: '📐 Create Worksheet', prompt: 'Generate a printable worksheet with questions and spacing.' }
         ];
     } else if (host === Office.HostType.Excel) {
         actions = [
@@ -96,7 +115,9 @@ function loadQuickActions(host, container) {
         btn.innerText = act.label;
         btn.onclick = async () => {
             const contextData = await OfficeIntegration.readSelection();
-            const fullPrompt = `${act.prompt}\n\nSelected Data/Text:\n${contextData}`;
+            const fullPrompt = contextData 
+                ? `${act.prompt}\n\nSelected Data/Text:\n${contextData}`
+                : act.prompt;
             document.getElementById('user-input').value = fullPrompt;
             handleUserSend();
         };

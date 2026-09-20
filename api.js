@@ -17,18 +17,24 @@ class GeminiAPI {
             throw new Error("API Key is missing. Click the ⚙️ icon to set your Google Gemini API Key.");
         }
 
-        // Direct call to Gemini Native REST Endpoint
+        // Direct call to Gemini REST Endpoint
         const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${this.apiKey}`;
 
+        // Construct standard payload with system_instruction support
         const payload = {
             contents: [
                 {
-                    parts: [
-                        { text: systemInstruction ? `[Instruction: ${systemInstruction}]\n\n${prompt}` : prompt }
-                    ]
+                    role: "user",
+                    parts: [{ text: prompt }]
                 }
             ]
         };
+
+        if (systemInstruction) {
+            payload.system_instruction = {
+                parts: [{ text: systemInstruction }]
+            };
+        }
 
         const response = await fetch(url, {
             method: 'POST',
@@ -42,11 +48,19 @@ class GeminiAPI {
             throw new Error(data.error?.message || `API Request Failed with status ${response.status}`);
         }
 
-        if (data.candidates && data.candidates[0]?.content?.parts[0]?.text) {
-            return data.candidates[0].content.parts[0].text;
-        } else {
-            throw new Error("Received an unexpected response structure from Gemini API.");
+        // Check if response was blocked or incomplete
+        const candidate = data.candidates && data.candidates[0];
+        if (candidate) {
+            if (candidate.finishReason === "SAFETY") {
+                throw new Error("Response was flagged and blocked due to safety settings.");
+            }
+            
+            if (candidate.content && candidate.content.parts && candidate.content.parts[0]?.text) {
+                return candidate.content.parts[0].text;
+            }
         }
+
+        throw new Error("Received an unexpected or empty response structure from Gemini API.");
     }
 }
 
