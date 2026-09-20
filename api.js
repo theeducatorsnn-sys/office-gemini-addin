@@ -1,6 +1,7 @@
 class GeminiAPI {
     constructor() {
-        this.apiKey = localStorage.getItem('GEMINI_API_KEY') || '';
+        // Uses stored key if set via UI; falls back to your provided default key
+        this.apiKey = localStorage.getItem('GEMINI_API_KEY') || 'AQ.Ab8RN6Jwr83w-Wlf4Ikg3euUf4YAVJsQR6u1ePIKH9YmeNTVBw';
     }
 
     setApiKey(key) {
@@ -61,6 +62,48 @@ class GeminiAPI {
         }
 
         throw new Error("Received an unexpected or empty response structure from Gemini API.");
+    }
+
+    /**
+     * AI Image Generation via Imagen 3 API
+     * Generates an image and returns an HTML string containing the base64 encoded image.
+     */
+    async generateImage(prompt) {
+        if (!this.apiKey) {
+            throw new Error("API Key is missing. Click the ⚙️ icon to set your Google Gemini API Key.");
+        }
+
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:predict?key=${this.apiKey}`;
+
+        const payload = {
+            instances: [
+                { prompt: prompt }
+            ],
+            parameters: {
+                sampleCount: 1,
+                aspectRatio: "1:1"
+            }
+        };
+
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error?.message || `Image generation failed with status ${response.status}`);
+        }
+
+        // Parse Base64 Image string from predictions array
+        if (data.predictions && data.predictions[0]?.bytesBase64Encoded) {
+            const base64Image = data.predictions[0].bytesBase64Encoded;
+            return `<img src="data:image/png;base64,${base64Image}" style="max-width:350px; height:auto; display:block; margin:10px 0;" />`;
+        }
+
+        throw new Error("No image data returned from Imagen API.");
     }
 }
 
