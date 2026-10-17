@@ -1,175 +1,81 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
-           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
-           xmlns:ov="http://schemas.microsoft.com/office/taskpaneappversionoverrides"
-           xsi:type="TaskPaneApp">
-  <Id>c8f76e33-7d8b-4a52-921c-a110e527d7ef</Id>
+<?xml version="1.0" encoding="UTF-8"?>
+<OfficeApp 
+  xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
+  xmlns:ov="http://schemas.microsoft.com/office/taskpaneappversionoverrides"
+  xsi:type="TaskPaneApp">
+
+  <Id>d3b07384-d113-4f4a-a128-2315d0828ac2</Id>
   <Version>1.0.0.0</Version>
-  <ProviderName>Office AI Studio</ProviderName>
+  <ProviderName>Custom Dev</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
-  <DisplayName DefaultValue="Office AI Copilot" />
-  <Description DefaultValue="Unified AI assistant for Microsoft Word, Excel, and PowerPoint with OpenAI, Gemini, Claude, and OpenRouter." />
-  <IconUrl DefaultValue="https://theeducatorsnn-sys.github.io/office-gemini-addin/assets/icon-32.png" />
-  <HighResolutionIconUrl DefaultValue="https://theeducatorsnn-sys.github.io/office-gemini-addin/assets/icon-80.png" />
-  <SupportUrl DefaultValue="https://theeducatorsnn-sys.github.io/office-gemini-addin/" />
-  <AppDomains>
-    <AppDomain>https://theeducatorsnn-sys.github.io</AppDomain>
-  </AppDomains>
+  <DisplayName DefaultValue="Gemini AI Assistant" />
+  <Description DefaultValue="Universal Gemini AI Sidebar for MS Office Apps" />
+  <IconUrl DefaultValue="https://theeducatorsnn-sys.github.io/office-gemini-addin/assets/icon-32.png"/>
+  <HighResolutionIconUrl DefaultValue="https://theeducatorsnn-sys.github.io/office-gemini-addin/assets/icon-80.png"/>
+  <SupportUrl DefaultValue="https://theeducatorsnn-sys.github.io/office-gemini-addin/index.html"/>
+
   <Hosts>
     <Host Name="Document" />
     <Host Name="Workbook" />
     <Host Name="Presentation" />
   </Hosts>
+
   <DefaultSettings>
     <SourceLocation DefaultValue="https://theeducatorsnn-sys.github.io/office-gemini-addin/index.html" />
   </DefaultSettings>
+
   <Permissions>ReadWriteDocument</Permissions>
 
   <VersionOverrides xmlns="http://schemas.microsoft.com/office/taskpaneappversionoverrides" xsi:type="VersionOverridesV1_0">
     <Hosts>
-      <!-- Microsoft Word -->
+      <!-- Word -->
       <Host xsi:type="Document">
         <DesktopFormFactor>
-          <GetStarted>
-            <Title resid="GetStarted.Title"/>
-            <Description resid="GetStarted.Description"/>
-            <LearnMoreUrl resid="GetStarted.LearnMoreUrl"/>
-          </GetStarted>
-          <ExtensionPoint xsi:type="PrimaryCommandSurface">
-            <CustomTab id="TabOfficeAiWord">
-              <Group id="GroupOfficeAiWord">
-                <Label resid="Group.Label" />
-                <Icon>
-                  <bt:Image size="16" resid="Icon.16" />
-                  <bt:Image size="32" resid="Icon.32" />
-                  <bt:Image size="80" resid="Icon.80" />
-                </Icon>
-                <Control xsi:type="Button" id="ButtonWordTaskpane">
-                  <Label resid="Button.Label" />
-                  <Supertip>
-                    <Title resid="Button.Title" />
-                    <Description resid="Button.Description" />
-                  </Supertip>
-                  <Icon>
-                    <bt:Image size="16" resid="Icon.16" />
-                    <bt:Image size="32" resid="Icon.32" />
-                    <bt:Image size="80" resid="Icon.80" />
-                  </Icon>
-                  <Action xsi:type="ShowTaskpane">
-                    <TaskpaneId>OfficeAiTaskpaneWord</TaskpaneId>
-                    <SourceLocation resid="Taskpane.Url" />
-                  </Action>
+          <ExtensionPoint xsi:type="TaskPane">
+            <OfficeTab id="TabHome">
+              <Group id="GeminiGroupWord">
+                <Label DefaultValue="Gemini AI"/>
+                <Control xsi:type="Button" id="TaskPaneButtonWord">
+                  <Label DefaultValue="Gemini Assistant"/>
+                  <Supertip title="Gemini Assistant" description="Open Gemini Chat Sidebar"/>
+                  <Icon><bt:Image size="16" resid="Icon16"/><bt:Image size="32" resid="Icon32"/><bt:Image size="80" resid="Icon80"/></Icon>
+                  <Action xsi:type="ShowTaskpane"><TaskpaneId>ButtonIdWord</TaskpaneId><SourceLocation resid="TaskPaneUrl"/></Action>
                 </Control>
               </Group>
-              <Label resid="Tab.Label"/>
-            </CustomTab>
+            </OfficeTab>
           </ExtensionPoint>
         </DesktopFormFactor>
       </Host>
-
-      <!-- Microsoft Excel -->
+      <!-- Excel -->
       <Host xsi:type="Workbook">
         <DesktopFormFactor>
-          <GetStarted>
-            <Title resid="GetStarted.Title"/>
-            <Description resid="GetStarted.Description"/>
-            <LearnMoreUrl resid="GetStarted.LearnMoreUrl"/>
-          </GetStarted>
-          <ExtensionPoint xsi:type="PrimaryCommandSurface">
-            <CustomTab id="TabOfficeAiExcel">
-              <Group id="GroupOfficeAiExcel">
-                <Label resid="Group.Label" />
-                <Icon>
-                  <bt:Image size="16" resid="Icon.16" />
-                  <bt:Image size="32" resid="Icon.32" />
-                  <bt:Image size="80" resid="Icon.80" />
-                </Icon>
-                <Control xsi:type="Button" id="ButtonExcelTaskpane">
-                  <Label resid="Button.Label" />
-                  <Supertip>
-                    <Title resid="Button.Title" />
-                    <Description resid="Button.Description" />
-                  </Supertip>
-                  <Icon>
-                    <bt:Image size="16" resid="Icon.16" />
-                    <bt:Image size="32" resid="Icon.32" />
-                    <bt:Image size="80" resid="Icon.80" />
-                  </Icon>
-                  <Action xsi:type="ShowTaskpane">
-                    <TaskpaneId>OfficeAiTaskpaneExcel</TaskpaneId>
-                    <SourceLocation resid="Taskpane.Url" />
-                  </Action>
+          <ExtensionPoint xsi:type="TaskPane">
+            <OfficeTab id="TabHome">
+              <Group id="GeminiGroupExcel">
+                <Label DefaultValue="Gemini AI"/>
+                <Control xsi:type="Button" id="TaskPaneButtonExcel">
+                  <Label DefaultValue="Gemini Assistant"/>
+                  <Supertip title="Gemini Assistant" description="Open Gemini Chat Sidebar"/>
+                  <Icon><bt:Image size="16" resid="Icon16"/><bt:Image size="32" resid="Icon32"/><bt:Image size="80" resid="Icon80"/></Icon>
+                  <Action xsi:type="ShowTaskpane"><TaskpaneId>ButtonIdExcel</TaskpaneId><SourceLocation resid="TaskPaneUrl"/></Action>
                 </Control>
               </Group>
-              <Label resid="Tab.Label"/>
-            </CustomTab>
-          </ExtensionPoint>
-        </DesktopFormFactor>
-      </Host>
-
-      <!-- Microsoft PowerPoint -->
-      <Host xsi:type="Presentation">
-        <DesktopFormFactor>
-          <GetStarted>
-            <Title resid="GetStarted.Title"/>
-            <Description resid="GetStarted.Description"/>
-            <LearnMoreUrl resid="GetStarted.LearnMoreUrl"/>
-          </GetStarted>
-          <ExtensionPoint xsi:type="PrimaryCommandSurface">
-            <CustomTab id="TabOfficeAiPPT">
-              <Group id="GroupOfficeAiPPT">
-                <Label resid="Group.Label" />
-                <Icon>
-                  <bt:Image size="16" resid="Icon.16" />
-                  <bt:Image size="32" resid="Icon.32" />
-                  <bt:Image size="80" resid="Icon.80" />
-                </Icon>
-                <Control xsi:type="Button" id="ButtonPPTTaskpane">
-                  <Label resid="Button.Label" />
-                  <Supertip>
-                    <Title resid="Button.Title" />
-                    <Description resid="Button.Description" />
-                  </Supertip>
-                  <Icon>
-                    <bt:Image size="16" resid="Icon.16" />
-                    <bt:Image size="32" resid="Icon.32" />
-                    <bt:Image size="80" resid="Icon.80" />
-                  </Icon>
-                  <Action xsi:type="ShowTaskpane">
-                    <TaskpaneId>OfficeAiTaskpanePPT</TaskpaneId>
-                    <SourceLocation resid="Taskpane.Url" />
-                  </Action>
-                </Control>
-              </Group>
-              <Label resid="Tab.Label"/>
-            </CustomTab>
+            </OfficeTab>
           </ExtensionPoint>
         </DesktopFormFactor>
       </Host>
     </Hosts>
-
     <Resources>
       <bt:Images>
-        <bt:Image id="Icon.16" DefaultValue="https://theeducatorsnn-sys.github.io/office-gemini-addin/assets/icon-16.png" />
-        <bt:Image id="Icon.32" DefaultValue="https://theeducatorsnn-sys.github.io/office-gemini-addin/assets/icon-32.png" />
-        <bt:Image id="Icon.80" DefaultValue="https://theeducatorsnn-sys.github.io/office-gemini-addin/assets/icon-80.png" />
+        <bt:Image id="Icon16" DefaultValue="https://theeducatorsnn-sys.github.io/office-gemini-addin/assets/icon-16.png"/>
+        <bt:Image id="Icon32" DefaultValue="https://theeducatorsnn-sys.github.io/office-gemini-addin/assets/icon-32.png"/>
+        <bt:Image id="Icon80" DefaultValue="https://theeducatorsnn-sys.github.io/office-gemini-addin/assets/icon-80.png"/>
       </bt:Images>
       <bt:Urls>
-        <bt:Url id="GetStarted.LearnMoreUrl" DefaultValue="https://theeducatorsnn-sys.github.io/office-gemini-addin/" />
-        <bt:Url id="Taskpane.Url" DefaultValue="https://theeducatorsnn-sys.github.io/office-gemini-addin/index.html" />
+        <bt:Url id="TaskPaneUrl" DefaultValue="https://theeducatorsnn-sys.github.io/office-gemini-addin/index.html"/>
       </bt:Urls>
-      <bt:ShortStrings>
-        <bt:String id="GetStarted.Title" DefaultValue="Welcome to Office AI Copilot" />
-        <bt:String id="Group.Label" DefaultValue="Office AI" />
-        <bt:String id="Button.Label" DefaultValue="AI Copilot" />
-        <bt:String id="Button.Title" DefaultValue="Launch Office AI Copilot" />
-        <bt:String id="Tab.Label" DefaultValue="AI Assistant" />
-      </bt:ShortStrings>
-      <bt:LongStrings>
-        <bt:String id="GetStarted.Description" DefaultValue="Unified AI assistant for Word, Excel, and PowerPoint with multi-model support." />
-        <bt:String id="Button.Description" DefaultValue="Open the Unified Office AI Assistant to analyze, write, code, and generate slides directly in Office." />
-      </bt:LongStrings>
     </Resources>
   </VersionOverrides>
 </OfficeApp>
